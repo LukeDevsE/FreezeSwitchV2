@@ -22,7 +22,7 @@ def main():
 
     layout = QVBoxLayout()
     text = QComboBox()
-    text.addItems(["`","q","z","r","f","x","c","v"])
+    text.addItems(["`","1","2","3","4","5","6","7","8","9","0","-","=","q","e","r","t","y","u","i","o","p"])
     text.setCurrentText("`")
     button = QCheckBox("Freeze Roblox!")
     button.clicked.connect(lambda: toggle(button.isChecked()))
@@ -42,11 +42,13 @@ def Toggletoggle(button: QCheckBox, key):
 def toggle(checked):
     if (checked):
         pid = get_process_id_by_name("RobloxPlayerBeta.exe")
-        process = psutil.Process(pid)
-        process.suspend()
+        if pid != None:
+            process = psutil.Process(pid)
+            process.suspend()
     else:
         pid = get_process_id_by_name("RobloxPlayerBeta.exe")
-        process = psutil.Process(pid)
-        process.resume()
+        if pid != None:
+            process = psutil.Process(pid)
+            process.resume()
 if __name__ == "__main__":
     main()
