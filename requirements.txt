@@ -1,0 +1,4 @@
+psutil
+PyQt5
+keyboard
+darkstyle
