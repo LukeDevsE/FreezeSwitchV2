@@ -7,3 +7,4 @@ you can edit it in the code or suggest in the issues tab for me to add more keys
 
 # Extra
 for the seconds one, the max you can do is 9, anything above will just kick you from the game saying "no internet" (it says that cuz the game is frozen)
+and also dont click on the window when you freeze it (cause windows crashes roblox, when you click it, while its frozen)
