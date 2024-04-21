@@ -1,9 +1,11 @@
 # imports
 import psutil
-from PyQt5.QtWidgets import QApplication,QWidget,QVBoxLayout,QComboBox,QCheckBox,QSpinBox,QLabel,QPushButton
+from PyQt5.QtWidgets import QApplication,QWidget,QVBoxLayout,QComboBox,QCheckBox,QSpinBox,QLabel,QPushButton,QMessageBox
 from PyQt5.QtCore import Qt,QEventLoop,QTimer
 import keyboard
 import qdarkstyle
+import urllib.request, json 
+import webbrowser
 from time import sleep
 # imports end
 #gets pid from the name
@@ -14,6 +16,9 @@ def get_process_id_by_name(name):
     return None
 # try to see if roblox is open and if it is set it
 pid = get_process_id_by_name("RobloxPlayerBeta.exe")
+
+version = "https://github.com/LukeDevsE/FreezeSwitchV2/releases/tag/v2.0.2"
+
 #main ui code
 def main():
     #initialize app
@@ -59,6 +64,22 @@ def main():
     window.show()
     #sets the size
     window.setGeometry(638,218,149,104)
+    try:
+        with urllib.request.urlopen("https://api.github.com/repos/LukeDevsE/FreezeSwitchV2/releases") as url:
+            try:
+                data = json.load(url)
+                if version != data[0]['html_url']:
+                    messagebox = QMessageBox()
+                    messagebox.setText("There is a new update, pressing yes will send you to the download page (github)")
+                    messagebox.setWindowTitle("New Update!")
+                    messagebox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                    btn = messagebox.exec_()
+                if btn == QMessageBox.Yes:
+                    webbrowser.open(data[0]['html_url'], new=0, autoraise=True)
+            except:
+                print("error getting update")
+    except:
+        print("offline")
     #and executes the app
     app.exec_()
 
