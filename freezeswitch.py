@@ -2,10 +2,12 @@
 import psutil
 from PyQt5.QtWidgets import QApplication,QWidget,QVBoxLayout,QComboBox,QCheckBox,QSpinBox,QLabel,QPushButton,QMessageBox
 from PyQt5.QtCore import Qt,QEventLoop,QTimer
+from PyQt5.QtGui import QFont,QFontDatabase,QIcon
 import keyboard
 import qdarkstyle
 import urllib.request, json 
 import webbrowser
+import sys,os
 from time import sleep
 # imports end
 #gets pid from the name
@@ -17,8 +19,8 @@ def get_process_id_by_name(name):
 # try to see if roblox is open and if it is set it
 pid = get_process_id_by_name("RobloxPlayerBeta.exe")
 
-version = "https://github.com/LukeDevsE/FreezeSwitchV2/releases/tag/v2.0.2"
-
+version = "https://github.com/LukeDevsE/FreezeSwitchV2/releases/tag/v2.0.3"
+basedir = os.path.dirname(__file__)
 #main ui code
 def main():
     #initialize app
@@ -28,20 +30,27 @@ def main():
     #make window
     window = QWidget()
     # make it so theres only the x
-    window.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
+    window.setWindowFlags(Qt.WindowType.WindowCloseButtonHint | Qt.WindowType.WindowMinimizeButtonHint | Qt.WindowType.WindowStaysOnTopHint)
+    window.setWindowOpacity(0.75)
+    window.setWindowIcon(QIcon(os.path.join(basedir, 'icon.png')))
     #qt5 is pretty cool, but this just sets the title of the window to Freeze Switch V2, kinda obv
     window.setWindowTitle("Freeze Switch V2")
+    idofthis = QFontDatabase.addApplicationFont(os.path.join(basedir, 'Geologica-Medium.ttf'))
+    font = QFont("Geologica Roman Medium",8)
+    
     #basically it puts stuff up to down
     layout = QVBoxLayout()
     #this is the key picker
     text = QComboBox()
     #label for the cooldown
     label = QLabel()
-    label.setText("Seconds Default 7, 0 to disable. this waits a set amount of time and unfreezes")
+    label.setText("Seconds Default 0, 0 to disable. This waits a set amount of time and unfreezes")
+    label.setFont(font)
+    
     #cooldown number
     cooldown = QSpinBox()
     #default number
-    cooldown.setValue(7)
+    cooldown.setValue(0)
     #make a max, since anything above 9, will just kick you from the game for no internet
     cooldown.setMaximum(9)
     #add all the keys to the key picker
@@ -50,6 +59,7 @@ def main():
     text.setCurrentText("`")
     #the main freeze button
     button = QCheckBox("Freeze Roblox!")
+    button.setFont(font)
     #when freeze button clickeed, call toggle function and give the state of the button (checked), the cooldown number, and the button itself.
     button.clicked.connect(lambda: toggle(button.isChecked(),cooldown.value(),button))
     #main keyboard function where if you press a key, it freezes. it passes in, the button its self, the key you picked, and the cooldown value
@@ -64,6 +74,7 @@ def main():
     window.show()
     #sets the size
     window.setGeometry(638,218,149,104)
+    window.setFixedSize(window.size())
     try:
         with urllib.request.urlopen("https://api.github.com/repos/LukeDevsE/FreezeSwitchV2/releases") as url:
             try:
@@ -73,6 +84,8 @@ def main():
                     messagebox.setText("There is a new update, pressing yes will send you to the download page (github)")
                     messagebox.setWindowTitle("New Update!")
                     messagebox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                    messagebox.setWindowIcon(QIcon(os.path.join(basedir, 'icon.png')))
+                    messagebox.setFont(font)
                     btn = messagebox.exec_()
                 if btn == QMessageBox.Yes:
                     webbrowser.open(data[0]['html_url'], new=0, autoraise=True)
